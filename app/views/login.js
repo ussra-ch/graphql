@@ -91,12 +91,7 @@ export function login() {
             if (data.error) throw data.error
             localStorage.setItem('jwtToken', data)
             profile()
-            // setTimeout(()=>{
-            // }, 500)
-            // profile()
         }) .catch (error => {
-            // if (error.error) throw error.error
-            // Show error message
             errorMessage.textContent = error.message || 'Invalid credentials. Please try again.'
             errorMessage.classList.add('show')
 

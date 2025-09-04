@@ -1,74 +1,11 @@
-import { personalInfos, friendSection, ratioRate, currentProject } from "../controllers/profile.js"
 import { authLayout } from "./authLayout.js"
+import { currentProject, friendSection, personalInfos, ratioRate, xp, teamMembers } from "../controllers/profile.js"
 
 export function profile() {
     authLayout(renderProfile)
 }
 
 function renderProfile() {
-    // const styles = document.createElement('style')
-    // styles.textContent = `
-    //     body {
-    //         background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
-    //         min-height: 100vh;
-    //         margin: 0;
-    //         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    //     }
-    //     #contentWrapper {
-    //         display: flex;
-    //         align-items: center;
-    //         justify-content: center;
-    //         min-height: calc(100vh - 72px);
-    //         padding: 32px;
-    //     }
-    //     .container-card {
-    //         background: rgba(31, 41, 55, 0.9);
-    //         backdrop-filter: blur(10px);
-    //     }
-    //     .metric-card {
-    //         background: linear-gradient(135deg, #374151 0%, #4B5563 100%);
-    //         border: 1px solid rgba(75, 85, 99, 0.3);
-    //         transition: all 0.3s ease;
-    //     }
-    //     .metric-card:hover {
-    //         transform: translateY(-5px);
-    //         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    //     }
-    //     .animate-fade-in {
-    //         animation: fadeIn 0.5s ease-in-out;
-    //     }
-    //     @keyframes fadeIn {
-    //         from { opacity: 0; transform: translateY(20px); }
-    //         to { opacity: 1; transform: translateY(0); }
-    //     }
-    //     .chart-title {
-    //         font-size: 16px;
-    //         font-weight: 600;
-    //         color: #e5e7eb;
-    //         margin-bottom: 12px;
-    //         text-align: center;
-    //     }
-    //     .bar-label {
-    //         fill: #9ca3af;
-    //         font-size: 12px;
-    //     }
-    //     .bar-value {
-    //         fill: #e5e7eb;
-    //         font-size: 14px;
-    //         font-weight: 600;
-    //     }
-    //     .donut-text {
-    //         fill: #e5e7eb;
-    //         font-size: 32px;
-    //         font-weight: 700;
-    //     }
-    //     .donut-subtext {
-    //         fill: #9ca3af;
-    //         font-size: 14px;
-    //     }
-    // `
-    // document.head.appendChild(styles)
-
     const contentWrapper = document.getElementById('contentWrapper')
     contentWrapper.innerHTML = `
     <div class="animate-fade-in container" style="width: 100%; max-width: 1200px; padding: 32px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); background: rgba(31, 41, 55, 0.9); border: 1px solid rgba(55, 65, 81, 0.5); display: flex; gap: 32px;">
@@ -93,6 +30,14 @@ function renderProfile() {
                 <div style="margin-bottom: 16px;">
                     <span style="font-weight: 600; color: #9ca3af;">Phone:</span> 
                     <span id="userPhone"></span>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <span style="font-weight: 600; color: #9ca3af;">Country:</span> 
+                    <span id="country"></span>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <span style="font-weight: 600; color: #9ca3af;">Birth city:</span> 
+                    <span id="birthCity"></span>
                 </div>
             </div>
         </div>
@@ -147,252 +92,82 @@ function renderProfile() {
     `
 
     loadUserData()
-    loadFriendData()
+    loadFriendData(loadUserData())
     loadRatioData()
     loadCurrentProject()
 }
 
-function loadUserData() {
-    const token = localStorage.getItem('jwtToken')
-    const query = `{
-        user{
-            lastName
-            firstName
-            login
-            email
-            attrs
-        }
-    }`
+async function loadUserData() {
+    let userInfos = await personalInfos()
+    document.getElementById('profileName').textContent = `${userInfos.firstName} ${userInfos.lastName}`
+    document.getElementById('userName').textContent = `${userInfos.firstName} ${userInfos.lastName}`
+    document.getElementById('userUsername').textContent = userInfos.login
+    document.getElementById('userEmail').textContent = userInfos.email
+    document.getElementById('userPhone').textContent = userInfos.tel
+    document.getElementById('country').textContent = userInfos.country
+    document.getElementById('birthCity').textContent = userInfos.birthCity
 
-    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ query })
-    }).then(res => {
-        return res.json()
-    }).then(data =>{
-        if (data.error) throw data.error
-        if (data.data && data.data.user[0]) {
-            const user = data.data.user[0]
-            document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`
-            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`
-            document.getElementById('userUsername').textContent = user.login
-            document.getElementById('userEmail').textContent = user.email
-            document.getElementById('userPhone').textContent = user.attrs.tel
-        }
-    }).catch (error => {
-        console.error("Error loading navbar data:", error)
-    })
-
-    const xpQuery = `{
-        user {
-            xps(where: {path: {_eq: "/zone01oujda/div-01"}}) {
-                amount
-            }
-            level: transactions(where: {type: {_eq: "level"}, path: {_like: "%/zone01oujda/div-01"}}, order_by: {amount: desc}, limit: 1) {
-                amount
-            }
-        }
-    }`
-
-    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ xpQuery })
-    }).then(res => {
-        return res.json()
-    }).then(data =>{
-        if (data.error) throw data.error
-        if (data.data && data.data.user[0]) {
-            const totalXp = data.data.user[0].xps.reduce((sum, xp) => sum + xp.amount, 0)
-            document.getElementById('totalXP').textContent = `${(totalXp / 1000).toFixed(2)} kB`
-            
-            const level = data.data.user[0].level[0]?.amount || 0
-            document.getElementById('userLevel').textContent = level.toString()
-        }
-    }).catch (error => {
-        console.error("Error loading navbar data:", error)
-    })
+    let xpInfos = await xp()
+    document.getElementById('totalXP').textContent = `${(xpInfos.totalXp / 1000).toFixed(2)} kB`
+    document.getElementById('userLevel').textContent = xpInfos.level.toString()
+    return userInfos.login
 }
 
-function loadFriendData() {
-    const token = localStorage.getItem('jwtToken')
-    const query = `{ 
-        user {
-            login
-            finished_projects: groups(where: {
-                group: {status: {_eq: finished}, _and: 
-                    {eventId: {_eq: 41}}
-                }
-            }) {
-                group { path members { userLogin } }
-            }
-        }
-    }`
-
-    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ query })
-    }).then(res => {
-        return res.json()
-    }).then(data =>{
-        if (data.data && data.data.user[0]) {
-            const userLogin = data.data.user[0].login
-            let collaborators = []
-            
-            data.data.user[0].finished_projects.forEach(project => {
-                project.group.members.forEach(member => {
-                    if (member.userLogin !== userLogin) {
-                        let collab = collaborators.find(c => c.name === member.userLogin)
-                        if (collab) {
-                            collab.collaborations++
-                        } else {
-                            collaborators.push({ name: member.userLogin, collaborations: 1 })
-                        }
-                    }
-                })
-            })
-            
-            collaborators.sort((a, b) => b.collaborations - a.collaborations)
-            drawBestFriendsChart(collaborators.slice(0, 5))
-        }
-    }).catch (error => {
-        console.error("Error loading navbar data:", error)
-    })
+async function loadFriendData(login) {
+    let friends = await friendSection(login)
+    drawBestFriendsChart(friends.slice(0, 5),)
 }
 
-function loadRatioData() {
-    const token = localStorage.getItem('jwtToken')
-    const query = `{ 
-        user {
-            auditRatio totalUp totalDown
-        }
-    }`
-
-    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ query })
-    }).then(res => {
-        return res.json()
-    }).then(data =>{
-        if (data.data && data.data.user[0]) {
-            const ratio = data.data.user[0].auditRatio
-            const totalUp = data.data.user[0].totalUp
-            const totalDown = data.data.user[0].totalDown
-            
-            document.getElementById('ratioDisplay').textContent = ratio.toFixed(2)
-            
-            const completedPercentage = (totalUp / (totalUp + totalDown)) * 100
-            drawRatioChart({ completed: completedPercentage, missed: 100 - completedPercentage })
-        }
-    }).catch (error => {
-        console.error("Error loading navbar data:", error)
-    })
+async function loadRatioData() {
+    let ratioRateInfos = await ratioRate()
+    document.getElementById('ratioDisplay').textContent = ratioRateInfos.ratio.toFixed(2)
+    const completedPercentage = (ratioRateInfos.totalUp / (ratioRateInfos.totalUp + ratioRateInfos.totalDown)) * 100
+    drawRatioChart({ completed: completedPercentage, missed: 100 - completedPercentage })
 }
 
 async function loadCurrentProject() {
     const token = localStorage.getItem('jwtToken')
-    const query = `{
-        progress(
-            where: { isDone: { _eq: false } }, 
-            order_by: { createdAt: desc }, 
-            limit: 1
-        ) {
-            objectId
-            object {
-                id
-                name
-                type
-                attrs
-                createdAt
-                updatedAt
-            }
-        }
-    }`
+    document.getElementById('projectName').textContent = await currentProject()
 
-    try {
-        const response = await fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ query })
-        })
-        const data = await response.json()
-        
-        if (data.data && data.data.progress[0]) {
-            const projectName = data.data.progress[0].object.name
-            document.getElementById('projectName').textContent = projectName
-            
-            const teamQuery = `{
-                group(where: {path: {_ilike: "%${projectName}%"}, status: {_eq: working}}, limit: 1) {
-                    members {
-                        userLogin
-                    }
-                }
-            }`
-            
-            const teamResponse = await fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ query: teamQuery })
-            })
-            const teamData = await teamResponse.json()
-            
-            if (teamData.data && teamData.data.group[0]) {
-                const membersList = document.getElementById('teamMembersList')
-                membersList.innerHTML = ''
-                
-                teamData.data.group[0].members.forEach(member => {
-                    const listItem = document.createElement('li')
-                    listItem.style.cssText = 'font-size: 14px; color: #9ca3af; display: flex; align-items: center; gap: 8px; margin-bottom: 4px;'
-                    listItem.innerHTML = `
+    const teamData = await teamMembers(token);
+    if (teamData.length > 0) {
+        const membersList = document.getElementById('teamMembersList');
+        membersList.innerHTML = '';
+
+        teamData.forEach(memberLogin => {
+            const listItem = document.createElement('li');
+            listItem.style.cssText = 'font-size: 14px; color: #9ca3af; display: flex; align-items: center; gap: 8px; margin-bottom: 4px;';
+            listItem.innerHTML = `
                         <svg style="height: 16px; width: 16px; color: #a78bfa;" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                         </svg>
-                        <span>${member.userLogin}</span>
-                    `
-                    membersList.appendChild(listItem)
-                })
-            }
-        }
-    } catch (error) {
-        console.error("Error loading current project:", error)
+                        <span>${memberLogin.login}</span>
+                    `;
+            membersList.appendChild(listItem);
+        });
     }
 }
 
-function drawBestFriendsChart(data) {
+function drawBestFriendsChart(data, login) {
     const svg = document.getElementById('bestFriendsChart')
     if (!svg || !data || data.length === 0) return
     svg.innerHTML = ''
-    
+
     const svgWidth = svg.getBoundingClientRect().width || 350
     const svgHeight = 250
     const margin = { top: 20, right: 20, bottom: 40, left: 40 }
     const chartWidth = svgWidth - margin.left - margin.right
     const chartHeight = svgHeight - margin.top - margin.bottom
-    
-    const maxCollaborations = Math.max(...data.map(d => d.collaborations))
+
+    const maxCollaborations = Math.max(...data.map(d => d.count))
     const barWidth = chartWidth / data.length * 0.7
     const gap = chartWidth / data.length * 0.3
-    
+
     data.forEach((d, i) => {
-        const barHeight = (d.collaborations / maxCollaborations) * chartHeight
+        const barHeight = (d.count / maxCollaborations) * chartHeight
         const x = margin.left + (i * (barWidth + gap))
         const y = margin.top + (chartHeight - barHeight)
-        
+
         const bar = document.createElementNS("http://www.w3.org/2000/svg", "rect")
         bar.setAttribute('x', x)
         bar.setAttribute('y', y)
@@ -402,7 +177,7 @@ function drawBestFriendsChart(data) {
         bar.setAttribute('rx', 8)
         bar.setAttribute('ry', 8)
         svg.appendChild(bar)
-        
+
         const label = document.createElementNS("http://www.w3.org/2000/svg", "text")
         label.setAttribute('x', x + barWidth / 2)
         label.setAttribute('y', svgHeight - margin.bottom + 10)
@@ -410,13 +185,13 @@ function drawBestFriendsChart(data) {
         label.classList.add('bar-label')
         label.textContent = d.name.length > 10 ? d.name.substring(0, 10) + '...' : d.name
         svg.appendChild(label)
-        
+
         const value = document.createElementNS("http://www.w3.org/2000/svg", "text")
         value.setAttribute('x', x + barWidth / 2)
         value.setAttribute('y', y - 5)
         value.setAttribute('text-anchor', 'middle')
         value.classList.add('bar-value')
-        value.textContent = d.collaborations
+        value.textContent = d.count
         svg.appendChild(value)
     })
 }
@@ -459,7 +234,7 @@ function drawRatioChart(data) {
     completedCircle.setAttribute('stroke-dasharray', `${completedDash} ${circumference - completedDash}`)
     completedCircle.setAttribute('transform', `rotate(-90 ${size / 2} ${size / 2})`)
     svg.appendChild(completedCircle)
-    
+
     const missedCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle")
     missedCircle.setAttribute('cx', size / 2)
     missedCircle.setAttribute('cy', size / 2)
@@ -471,7 +246,7 @@ function drawRatioChart(data) {
     missedCircle.setAttribute('stroke-dashoffset', -completedDash)
     missedCircle.setAttribute('transform', `rotate(-90 ${size / 2} ${size / 2})`)
     svg.appendChild(missedCircle)
-    
+
     const percentText = document.createElementNS("http://www.w3.org/2000/svg", "text")
     percentText.setAttribute('x', size / 2)
     percentText.setAttribute('y', size / 2 - 10)
@@ -479,7 +254,7 @@ function drawRatioChart(data) {
     percentText.classList.add('donut-text')
     percentText.textContent = `${data.completed.toFixed(0)}%`
     svg.appendChild(percentText)
-    
+
     const subText = document.createElementNS("http://www.w3.org/2000/svg", "text")
     subText.setAttribute('x', size / 2)
     subText.setAttribute('y', size / 2 + 15)

@@ -1,3 +1,8 @@
+/* * {
+    animation: none !important;
+    transition: none !important;
+} */
+
 * {
     margin: 0;
     padding: 0;
@@ -14,6 +19,7 @@ body {
     position: relative;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+
 body::before {
     content: '';
     position: absolute;
@@ -48,6 +54,7 @@ body::before {
         transform: translateY(-100%);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -202,7 +209,7 @@ body::before {
     min-width: 200px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     display: none;
-    animation: dropdownFade 0.2s ease;
+    /* animation: dropdownFade 0.2s ease; */
 }
 
 @keyframes dropdownFade {
@@ -210,6 +217,7 @@ body::before {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -218,6 +226,8 @@ body::before {
 
 .dropdown-menu.show {
     display: block;
+    opacity: 1;
+    transform: none; 
 }
 
 .dropdown-item {
@@ -262,8 +272,13 @@ body::before {
 }
 
 @keyframes loadingAnimation {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
 }
 
 .loading-bar.show {
@@ -272,11 +287,11 @@ body::before {
 
 @media (max-width: 768px) {
 
-    
+
     .nav-user-info {
         display: none;
     }
-    
+
     .navbar {
         padding: 0 16px;
     }
@@ -308,7 +323,7 @@ body::before {
 }
 
 .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 @keyframes fadeIn {
@@ -354,8 +369,13 @@ body::before {
 }
 
 @keyframes moveBackground {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(50px, 50px); }
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(50px, 50px);
+    }
 }
 
 .login-container {
@@ -369,7 +389,7 @@ body::before {
     position: absolute;
     z-index: 1;
     margin-top: auto;
-    margin-left: auto ;
+    margin-left: auto;
 }
 
 @keyframes slideUp {
@@ -377,6 +397,7 @@ body::before {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -398,8 +419,15 @@ body::before {
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .title {
@@ -533,9 +561,19 @@ body::before {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
 }
 
 .error-message.show {
@@ -554,8 +592,13 @@ body::before {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .submit-button.loading .button-text {
