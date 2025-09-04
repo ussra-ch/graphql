@@ -27,6 +27,9 @@ export function personalInfos() {
             // console.log("login :", data.data.user[0].login);
             // console.log("email :", data.data.user[0].email);
             // console.log("attrs :", data.data.user[0].attrs.tel);
+            return {"firstName" : data.data.user[0].firstName, "lastName": data.data.user[0].lastName, 
+                "login": data.data.user[0].login, "email" : data.data.user[0].attrs.tel 
+            }
         })
 
 }
