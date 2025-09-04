@@ -152,7 +152,7 @@ function renderProfile() {
     loadCurrentProject()
 }
 
-async function loadUserData() {
+function loadUserData() {
     const token = localStorage.getItem('jwtToken')
     const query = `{
         user{
@@ -164,16 +164,16 @@ async function loadUserData() {
         }
     }`
 
-    try {
-        const response = await fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ query })
-        })
-        const data = await response.json()
-        
+    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ query })
+    }).then(res => {
+        return res.json()
+    }).then(data =>{
+        if (data.error) throw data.error
         if (data.data && data.data.user[0]) {
             const user = data.data.user[0]
             document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`
@@ -182,9 +182,9 @@ async function loadUserData() {
             document.getElementById('userEmail').textContent = user.email
             document.getElementById('userPhone').textContent = user.attrs.tel
         }
-    } catch (error) {
-        console.error("Error loading user data:", error)
-    }
+    }).catch (error => {
+        console.error("Error loading navbar data:", error)
+    })
 
     const xpQuery = `{
         user {
@@ -197,29 +197,29 @@ async function loadUserData() {
         }
     }`
 
-    try {
-        const xpResponse = await fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ query: xpQuery })
-        })
-        const xpData = await xpResponse.json()
-        
-        if (xpData.data && xpData.data.user[0]) {
-            const totalXp = xpData.data.user[0].xps.reduce((sum, xp) => sum + xp.amount, 0)
+    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ xpQuery })
+    }).then(res => {
+        return res.json()
+    }).then(data =>{
+        if (data.error) throw data.error
+        if (data.data && data.data.user[0]) {
+            const totalXp = data.data.user[0].xps.reduce((sum, xp) => sum + xp.amount, 0)
             document.getElementById('totalXP').textContent = `${(totalXp / 1000).toFixed(2)} kB`
             
-            const level = xpData.data.user[0].level[0]?.amount || 0
+            const level = data.data.user[0].level[0]?.amount || 0
             document.getElementById('userLevel').textContent = level.toString()
         }
-    } catch (error) {
-        console.error("Error loading XP data:", error)
-    }
+    }).catch (error => {
+        console.error("Error loading navbar data:", error)
+    })
 }
 
-async function loadFriendData() {
+function loadFriendData() {
     const token = localStorage.getItem('jwtToken')
     const query = `{ 
         user {
@@ -234,16 +234,15 @@ async function loadFriendData() {
         }
     }`
 
-    try {
-        const response = await fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ query })
-        })
-        const data = await response.json()
-        
+    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ query })
+    }).then(res => {
+        return res.json()
+    }).then(data =>{
         if (data.data && data.data.user[0]) {
             const userLogin = data.data.user[0].login
             let collaborators = []
@@ -264,12 +263,12 @@ async function loadFriendData() {
             collaborators.sort((a, b) => b.collaborations - a.collaborations)
             drawBestFriendsChart(collaborators.slice(0, 5))
         }
-    } catch (error) {
-        console.error("Error loading friend data:", error)
-    }
+    }).catch (error => {
+        console.error("Error loading navbar data:", error)
+    })
 }
 
-async function loadRatioData() {
+function loadRatioData() {
     const token = localStorage.getItem('jwtToken')
     const query = `{ 
         user {
@@ -277,16 +276,15 @@ async function loadRatioData() {
         }
     }`
 
-    try {
-        const response = await fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ query })
-        })
-        const data = await response.json()
-        
+    fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ query })
+    }).then(res => {
+        return res.json()
+    }).then(data =>{
         if (data.data && data.data.user[0]) {
             const ratio = data.data.user[0].auditRatio
             const totalUp = data.data.user[0].totalUp
@@ -297,9 +295,9 @@ async function loadRatioData() {
             const completedPercentage = (totalUp / (totalUp + totalDown)) * 100
             drawRatioChart({ completed: completedPercentage, missed: 100 - completedPercentage })
         }
-    } catch (error) {
-        console.error("Error loading ratio data:", error)
-    }
+    }).catch (error => {
+        console.error("Error loading navbar data:", error)
+    })
 }
 
 async function loadCurrentProject() {
