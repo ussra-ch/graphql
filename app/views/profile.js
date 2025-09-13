@@ -1,5 +1,4 @@
-import { authLayout } from "./authLayout.js"
-// import { currentProject, friendSection, personalInfos, ratioRate, xp, teamMembers, fetchAllProfileData } from "../controllers/profile.js"
+import { authLayout, showLoadingBar } from "./authLayout.js"
 import { fetchAllProfileData, personalInfos } from "../controllers/profile.js"
 
 
@@ -100,8 +99,8 @@ function renderProfile() {
     getAllData()
 }
 
-let userInfos = await personalInfos()
 async function loadUserData() {
+    let userInfos = await personalInfos()
     document.getElementById('profileName').textContent = `${userInfos.firstName} ${userInfos.lastName}`
     document.getElementById('userName').textContent = `${userInfos.firstName} ${userInfos.lastName}`
     document.getElementById('userUsername').textContent = userInfos.login
@@ -116,40 +115,6 @@ async function loadUserData() {
     // return userInfos.login
 }
 
-// async function loadFriendData(login) {
-//     let friends = await friendSection(login)
-//     drawBestFriendsChart(friends.slice(0, 5),)
-// }
-
-// async function loadRatioData(data) {
-//     let ratioRateInfos = await ratioRate()
-//     document.getElementById('ratioDisplay').textContent = ratioRateInfos.ratio.toFixed(2)
-//     const completedPercentage = (ratioRateInfos.totalUp / (ratioRateInfos.totalUp + ratioRateInfos.totalDown)) * 100
-//     drawRatioChart({ completed: completedPercentage, missed: 100 - completedPercentage })
-// }
-
-// async function loadCurrentProject() {
-//     const token = localStorage.getItem('jwtToken')
-//     document.getElementById('projectName').textContent = await currentProject()
-
-//     const teamData = await teamMembers(token);
-//     if (teamData.length > 0) {
-//         const membersList = document.getElementById('teamMembersList');
-//         membersList.innerHTML = '';
-
-//         teamData.forEach(memberLogin => {
-//             const listItem = document.createElement('li');
-//             listItem.style.cssText = 'font-size: 14px; color: #9ca3af; display: flex; align-items: center; gap: 8px; margin-bottom: 4px;';
-//             listItem.innerHTML = `
-//                         <svg style="height: 16px; width: 16px; color: #a78bfa;" fill="currentColor" viewBox="0 0 20 20">
-//                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-//                         </svg>
-//                         <span>${memberLogin.login}</span>
-//                     `;
-//             membersList.appendChild(listItem);
-//         });
-//     }
-// }
 
 function drawBestFriendsChart(data, login) {
     const svg = document.getElementById('bestFriendsChart')
@@ -269,8 +234,8 @@ function drawRatioChart(data) {
 
 async function getAllData(){
     const token = localStorage.getItem('jwtToken')
+    let userInfos = await personalInfos()
     let allDataJson = await fetchAllProfileData(token, userInfos.login)
-    console.log("all data is :", allDataJson);
 
     //level
     document.getElementById('totalXP').textContent = `${(allDataJson.xp.totalXp / 1000).toFixed(2)} kB`
