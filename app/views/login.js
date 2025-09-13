@@ -8,7 +8,7 @@ export function login() {
     document.body.innerHTML = `
         <div class="login-container">
             <div class="login-header">
-                <img src="./images/01edu.png" alt="Zone01 Logo" class="logo">
+                <img src="./public/images/01edu.png" alt="Zone01 Logo" class="logo">
                 <h1 class="title">Zone01</h1>
                 <p class="subtitle">Please enter your credentials</p>
             </div>

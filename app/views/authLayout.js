@@ -13,7 +13,7 @@ export function authLayout(contentFunction) {
     document.body.innerHTML = `
         <nav class="navbar">
             <div class="nav-brand">
-                <img src="./images/01edu.png" alt="Zone01" class="nav-logo">
+                <img src="./public/images/01edu.png" alt="Zone01" class="nav-logo">
                 <h1 class="nav-title">Zone01 Oujda</h1>
             </div>
             
