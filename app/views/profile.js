@@ -9,9 +9,9 @@ export function profile() {
 function renderProfile() {
     const contentWrapper = document.getElementById('contentWrapper')
     contentWrapper.innerHTML = `
-    <div class="animate-fade-in container" style="width: 100%; max-width: 1200px; padding: 32px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); background: rgba(31, 41, 55, 0.9); border: 1px solid rgba(55, 65, 81, 0.5); display: flex; gap: 32px;">
+    <div class="animate-fade-in container" style="width: 100%; max-width: 1200px; padding: 32px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); background: rgba(31, 41, 55, 0.9); border: 1px solid rgba(55, 65, 81, 0.5); display: flex; gap: 32px; margin-bottom = 20px">
         
-        <div style="width: 33%; padding: 24px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); background: linear-gradient(135deg, #374151 0%, #4B5563 100%); display: flex; flex-direction: column; align-items: center;">
+        <div class ="personal-Infos-div" style="width: 33%; padding: 24px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); background: linear-gradient(135deg, #374151 0%, #4B5563 100%); display: flex; flex-direction: column; align-items: center;">
             <img src="https://placehold.co/120x120/4A5568/E2E8F0?text=User" alt="User Avatar" style="width: 128px; height: 128px; border-radius: 50%; margin-bottom: 16px; border: 4px solid #818cf8;">
             <h1 id="profileName" style="font-size: 28px; font-weight: 800; color: white; margin: 0 0 8px 0;">Loading...</h1>
             <p style="font-size: 14px; color: #9ca3af; margin-bottom: 32px;">Personal Information</p>
@@ -21,7 +21,7 @@ function renderProfile() {
                     <span id="userName"></span>
                 </div>
                 <div style="margin-bottom: 16px;">
-                    <span style="font-weight: 600; color: #9ca3af;">Username:</span> 
+                    <span id = "profile-username" style="font-weight: 600; color: #9ca3af;">Username:</span> 
                     <span id="userUsername"></span>
                 </div>
                 <div style="margin-bottom: 16px;">
@@ -33,7 +33,7 @@ function renderProfile() {
                     <span id="userPhone"></span>
                 </div>
                 <div style="margin-bottom: 16px;">
-                    <span style="font-weight: 600; color: #9ca3af;">Country:</span> 
+                    <span id = "profile-country" style="font-weight: 600; color: #9ca3af;">Country:</span> 
                     <span id="country"></span>
                 </div>
                 <div style="margin-bottom: 16px;">
