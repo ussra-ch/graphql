@@ -1,4 +1,4 @@
-import { authLayout, showLoadingBar } from "./authLayout.js"
+import { authLayout } from "./authLayout.js"
 import { fetchAllProfileData, personalInfos } from "../controllers/profile.js"
 
 
@@ -93,9 +93,6 @@ function renderProfile() {
     `
 
     loadUserData()
-    // loadFriendData(loadUserData())
-    // loadRatioData()
-    // loadCurrentProject()
     getAllData()
 }
 
@@ -108,13 +105,7 @@ async function loadUserData() {
     document.getElementById('userPhone').textContent = userInfos.tel
     document.getElementById('country').textContent = userInfos.country
     document.getElementById('birthCity').textContent = userInfos.birthCity
-
-    // let xpInfos = await xp()
-    // document.getElementById('totalXP').textContent = `${(xpInfos.totalXp / 1000).toFixed(2)} kB`
-    // document.getElementById('userLevel').textContent = xpInfos.level.toString()
-    // return userInfos.login
 }
-
 
 function drawBestFriendsChart(data, login) {
     const svg = document.getElementById('bestFriendsChart')
@@ -123,15 +114,17 @@ function drawBestFriendsChart(data, login) {
 
     const svgWidth = svg.getBoundingClientRect().width || 350
     const svgHeight = 250
-    const margin = { top: 20, right: 20, bottom: 40, left: 40 }
+    const margin = { top: 20, right: 10, bottom: 40, left: 20 }
     const chartWidth = svgWidth - margin.left - margin.right
     const chartHeight = svgHeight - margin.top - margin.bottom
 
-    const maxCollaborations = Math.max(...data.map(d => d.count))
+    const maxCollaborations = Math.max(...data.map(d => d.count)) // to find the highest number of collaborations
     const barWidth = chartWidth / data.length * 0.7
     const gap = chartWidth / data.length * 0.3
 
     data.forEach((d, i) => {
+        console.log("i is :", i);
+        
         const barHeight = (d.count / maxCollaborations) * chartHeight
         const x = margin.left + (i * (barWidth + gap))
         const y = margin.top + (chartHeight - barHeight)
@@ -143,7 +136,6 @@ function drawBestFriendsChart(data, login) {
         bar.setAttribute('height', barHeight)
         bar.setAttribute('fill', '#818cf8')
         bar.setAttribute('rx', 8)
-        bar.setAttribute('ry', 8)
         svg.appendChild(bar)
 
         const label = document.createElementNS("http://www.w3.org/2000/svg", "text")
@@ -151,7 +143,7 @@ function drawBestFriendsChart(data, login) {
         label.setAttribute('y', svgHeight - margin.bottom + 10)
         label.setAttribute('text-anchor', 'middle')
         label.classList.add('bar-label')
-        label.textContent = d.name.length > 10 ? d.name.substring(0, 10) + '...' : d.name
+        label.textContent = d.name
         svg.appendChild(label)
 
         const value = document.createElementNS("http://www.w3.org/2000/svg", "text")

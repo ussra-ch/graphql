@@ -21,7 +21,6 @@ export function authLayout(contentFunction) {
                 <div class="nav-user">
                     <div class="nav-user-info">
                         <p class="nav-user-name" id="navUserName">Loading...</p>
-                        <p class="nav-user-role">Student</p>
                     </div>
                     
                     <div class="nav-avatar-wrapper" id="avatarWrapper">
@@ -45,27 +44,20 @@ export function authLayout(contentFunction) {
                 </div>
             </div>
         </nav>
-        
-        <div class="loading-bar" id="loadingBar"></div>
-        
+                
         <div class="content-wrapper" id="contentWrapper">
         </div>
     `
 
     loadNavbarData()
     setupEventListeners()
-    
-    // if (contentFunction) {
-        contentFunction()
-    // }
+    contentFunction()
 }
 
 function setupEventListeners() {
     const avatarWrapper = document.getElementById('avatarWrapper')
     const dropdownMenu = document.getElementById('dropdownMenu')
     const logoutLink = document.getElementById('logoutLink')
-    // const profileLink = document.getElementById('profileLink')
-    // const settingsLink = document.getElementById('settingsLink')
     
     avatarWrapper.addEventListener('click', (e) => {
         e.stopPropagation()
@@ -76,15 +68,9 @@ function setupEventListeners() {
         dropdownMenu.classList.remove('show')
     })
     logoutLink.addEventListener('click', () => {
-        showLoadingBar()
         setTimeout(() => {
             localStorage.removeItem('jwtToken')
             window.location.reload()
         }, 500)
     })
-}
-
-export function showLoadingBar() {
-    const loadingBar = document.getElementById('loadingBar')
-    loadingBar.classList.remove('show')
 }

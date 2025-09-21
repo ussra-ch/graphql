@@ -3,16 +3,8 @@ export function loadNavbarData() {
     
     const query = `{
         user {
-            login
             firstName
             lastName
-            auditRatio
-            xps(where: {path: {_eq: "/zone01oujda/div-01"}}) {
-                amount
-            }
-            level: transactions(where: {type: {_eq: "level"}, path: {_like: "%/zone01oujda/div-01"}}, order_by: {amount: desc}, limit: 1) {
-                amount
-            }
         }
     }`
 

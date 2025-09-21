@@ -16,7 +16,7 @@ export function login() {
             <form id="loginForm">
                 <div class="form-group">
                     <label for="username" class="form-label">Username or Email</label>
-                    <svg class="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <svg class="input-icon" viewBox="0 0 20 20" fill="#a0aec0">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
                     <input 
@@ -29,10 +29,10 @@ export function login() {
                         autocomplete="username"
                     >
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
-                    <svg class="input-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <svg class="input-icon" viewBox="0 0 20 20" fill="#a0aec0">
                         <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                     </svg>
                     <input 
@@ -42,7 +42,6 @@ export function login() {
                         class="form-input" 
                         placeholder="Enter your password"
                         required
-                        autocomplete="current-password"
                     >
                 </div>
                 
@@ -59,7 +58,7 @@ export function login() {
             </div>
             
             <div class="footer-text">
-                Made with ❤️ by  <a href="https://github.com/ussra-ch/ussra-ch" class="footer-link">01 ychatoua</a>
+                Made with ❤️ by  <a href="https://github.com/ussra-ch/ussra-ch" class="footer-link">ychatoua</a>
             </div>
         </div>
     `
@@ -77,7 +76,6 @@ export function login() {
         const username = event.target.username.value
         const password = event.target.password.value
 
-        submitButton.classList.add('loading')
         submitButton.disabled = true
 
         fetch("https://learn.zone01oujda.ma/api/auth/signin", {
@@ -96,7 +94,6 @@ export function login() {
             errorMessage.classList.add('show')
 
             // Reset button state
-            submitButton.classList.remove('loading')
             submitButton.disabled = false
 
         })
