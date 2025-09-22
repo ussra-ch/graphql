@@ -280,16 +280,16 @@ body::before {
 
 .login-container {
     background: rgba(255, 255, 255, 0.95);
-    padding: 48px;
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    width: 100%;
-    max-width: 440px;
-    /* backdrop-filter: blur(10px); */
-    position: absolute;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 380px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 1;
-    margin-top: auto;
-    margin-left: auto;
+    padding: 32px;
 }
 
 .login-header {
@@ -503,6 +503,192 @@ body::before {
 .footer-link:hover {
     color: #764ba2;
 }
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    background: rgba(31, 41, 55, 0.9);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    display: flex;
+    gap: 32px;
+    margin: 0 auto 20px auto; /* FIXED: margin-bottom = 20px → margin: 0 auto 20px auto */
+    box-sizing: border-box;
+}
+
+.personal-infos-div {
+    width: 33%;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #374151 0%, #4B5563 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    margin-bottom: 16px;
+    border: 4px solid #818cf8;
+}
+
+.profile-name {
+    font-size: 28px;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 8px 0;
+    text-align: center;
+}
+
+.profile-subtitle {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-bottom: 32px;
+}
+
+.info-container {
+    width: 100%;
+    font-size: 14px;
+    color: #d1d5db;
+}
+
+.info-item {
+    margin-bottom: 16px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #9ca3af;
+}
+
+.main-content {
+    width: 67%;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    color: #e5e7eb;
+    margin-bottom: 32px;
+}
+
+.metric-card {
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #374151;
+}
+
+.metric-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+
+.metric-value {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* Add specific colors for metric values */
+.metric-value.xp { color: #5eead4; }
+.metric-value.ratio { color: #34d399; }
+.metric-value.level { color: #fbbf24; }
+
+.current-project {
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    margin-bottom: 32px;
+    background: #374151;
+}
+
+.project-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.project-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e5e7eb;
+    text-align: center;
+}
+
+.team-section {
+    margin-top: 16px;
+    width: 100%;
+}
+
+.team-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.team-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.charts-section {
+    padding-top: 24px;
+    border-top: 1px solid rgba(55, 65, 81, 0.5);
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 16px;
+}
+
+.chart-container {
+    background: #1f2937;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e5e7eb;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.chart-content {
+    display: flex;
+    justify-content: center;
+}
+
+.chart-container svg {
+    max-width: 100%;
+    height: auto;
+}
+#totalXP{
+    color: #34d399;
+}
+#userLevel{
+    color: #5eead4;
+}
+#ratioDisplay{
+    color: #facc15;
+}
 
 /* Responsive improvements */
 @media (max-width: 1024px) {
@@ -511,11 +697,6 @@ body::before {
         display: block !important;
         justify-content: unset !important;
         align-items: unset !important;
-    }
-
-    .login-container {
-        padding: 32px;
-        max-width: 90vw;
     }
 
     .container-card {
@@ -529,231 +710,176 @@ body::before {
 }
 
 @media (max-width: 768px) {
-    body {
-        background: #1e1e2e !important;
-    }
-
-    body::before {
-        background: none !important;
-    }
-
-    .navbar {
-        flex-direction: row;
-        height: auto;
-        padding: 8px 8px;
-        gap: 8px;
-    }
-
-    .nav-user {
-        margin-left: auto;
-    }
-
-    .nav-brand,
-    .nav-user {
-        gap: 8px;
-    }
-
-    .nav-title {
-        font-size: 18px;
-    }
-
-    .animate-fade-in {
-        width: 100% !important;
-        max-width: 100vw !important;
-        box-sizing: border-box !important;
-        overflow-x: auto !important;
-        padding: 0 0.5rem;
-        margin-top: 70px;
-    }
-
-    .ratio-chart-container,
-    .chart-container {
-        width: 100% !important;
-        max-width: 100vw !important;
-        min-width: 0 !important;
-        box-sizing: border-box !important;
-        margin: 8px 0 !important;
-        overflow-x: auto !important;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .ratio-chart {
-        width: 100% !important;
-        max-width: 320px !important;
-        min-width: 0 !important;
-        margin: 0 auto !important;
-        display: block;
-    }
-
-    #contentWrapper {
+    .dashboard-container {
         flex-direction: column;
-        padding: 16px;
-        min-height: unset;
-    }
-
-    .container-card,
-    .metric-card {
-        width: 100%;
-        min-width: unset;
-        max-width: 100vw;
-        padding: 16px;
-        margin: 8px 0;
-    }
-
-    .login-container {
+        gap: 24px;
         padding: 24px;
-        max-width: 98vw;
     }
 
-    .logo {
-        width: 60px;
-        height: 60px;
+    .personal-infos-div {
+        width: 100%;
+        padding: 20px;
     }
 
-    .title {
+    .user-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-name {
         font-size: 24px;
     }
 
-    .submit-button {
-        font-size: 15px;
-        padding: 12px 16px;
+    .main-content {
+        width: 100%;
+    }
+
+    /* FIXED: Single column for metrics and charts */
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .metric-card {
+        padding: 20px;
+    }
+
+    .metric-value {
+        font-size: 24px;
+    }
+
+    .chart-container {
+        padding: 20px;
     }
 }
 
 @media (max-width: 480px) {
-    .personal-Infos-div {
-        width: 65% !important;
-    }
-    #profileName {
-        font-size: 18px !important;
-        line-height: 1.2;
-        word-break: break-word;
+    .dashboard-container {
+        padding: 16px;
+        gap: 20px;
     }
 
-    #userEmail {
-        word-break: break-all;
-        overflow-wrap: anywhere;
-        display: block;
-        max-width: 100%;
+    .personal-infos-div {
+        padding: 16px;
     }
 
-    span[id] {
-        margin-left: -14px;
+    .user-avatar {
+        width: 80px;
+        height: 80px;
+        border: 3px solid #818cf8;
     }
 
-    #profile-username {
-        margin-left: -13px;
+    .profile-name {
+        font-size: 20px;
     }
 
-    .navbar {
+    .profile-subtitle {
+        font-size: 12px;
+        margin-bottom: 20px;
+    }
+
+    .info-container {
+        font-size: 12px;
+    }
+
+    .info-item {
+        margin-bottom: 12px;
+        display: flex;
         flex-direction: column;
-        padding: 4px 2px;
-        height: auto;
+        gap: 4px;
     }
 
-    .nav-logo,
-    .nav-avatar {
-        width: 32px;
-        height: 32px;
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
 
-    .nav-title {
-        font-size: 15px;
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .login-container {
-        padding: 12px;
-        border-radius: 12px;
+    .metric-card {
+        padding: 16px;
     }
 
-    .logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+    .metric-value {
+        font-size: 20px;
     }
 
-    .title {
+    .current-project {
+        padding: 16px;
+    }
+
+    .project-name {
         font-size: 18px;
     }
 
-    .form-input {
+    .charts-section {
+        padding-top: 20px;
+    }
+
+    .chart-container {
+        padding: 16px;
+    }
+
+    .chart-title {
         font-size: 14px;
-        padding: 10px 12px;
-        padding-left: 36px;
-        border-radius: 8px;
+        margin-bottom: 12px;
     }
 
-    .submit-button {
-        font-size: 13px;
-        padding: 10px 10px;
-        border-radius: 8px;
-    }
-
-    .container-card,
-    .metric-card {
-        padding: 8px;
-        border-radius: 8px;
-    }
-
-    .footer-text {
-        font-size: 12px;
+    .chart-container svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
     }
 }
 
 @media (max-width: 360px) {
-    .nav-avatar-wrapper {
-        display: none;
-    }
-    .personal-Infos-div {
-        width: 65% !important;
-    }
-    .nav-title {
-        font-size: 14px;
+    .dashboard-container {
+        padding: 12px;
+        gap: 16px;
     }
 
-    .nav-logo {
-        width: 28px;
-        height: 28px;
+    .personal-infos-div {
+        padding: 12px;
     }
 
-    .login-header {
-        margin-bottom: 24px;
+    .user-avatar {
+        width: 70px;
+        height: 70px;
     }
 
-    .logo {
-        width: 32px;
-        height: 32px;
+    .profile-name {
+        font-size: 18px;
     }
 
-    .title {
-        font-size: 16px;
+    .metric-card {
+        padding: 12px;
     }
 
-    .subtitle {
-        font-size: 14px;
+    .metric-value {
+        font-size: 18px;
     }
 
-    .form-input {
-        font-size: 13px;
-        padding: 8px 10px;
-        padding-left: 32px;
+    .current-project {
+        padding: 12px;
     }
 
-    .form-label {
-        font-size: 13px;
+    .chart-container {
+        padding: 12px;
     }
 
-    .input-icon {
-        width: 16px;
-        height: 16px;
-        top: 36px;
-        left: 12px;
+    .metrics-grid {
+        gap: 12px;
     }
 
-    .submit-button {
-        font-size: 12px;
-        padding: 10px 8px;
+    .charts-grid {
+        gap: 16px;
     }
 }
