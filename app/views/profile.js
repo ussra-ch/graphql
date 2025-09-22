@@ -112,20 +112,14 @@ function drawBestFriendsChart(data, login) {
     if (!svg || !data || data.length === 0) return
     svg.innerHTML = ''
 
-    // Get container width and set responsive dimensions
-    const container = svg.closest('.chart-container')
-    const containerWidth = container ? container.getBoundingClientRect().width : 350
+    let containerWidth = 350
 
-    // Responsive width calculation with padding consideration
     const svgWidth = Math.max(250, containerWidth - 48) // 48px for container padding (24px * 2)
-    const svgHeight = getResponsiveHeight()
-
-    // Responsive margins
-    const margin = getResponsiveMargins()
+    const svgHeight = 250
+    const margin = { top: 20, right: 10, bottom: 40, left: 20 }
     const chartWidth = svgWidth - margin.left - margin.right
     const chartHeight = svgHeight - margin.top - margin.bottom
 
-    // Update SVG dimensions
     svg.setAttribute('width', svgWidth)
     svg.setAttribute('height', svgHeight)
     svg.setAttribute('viewBox', `0 0 ${svgWidth} ${svgHeight}`)
@@ -133,9 +127,9 @@ function drawBestFriendsChart(data, login) {
     const maxCollaborations = Math.max(...data.map(d => d.count))
 
     // Responsive bar sizing
-    const availableWidth = chartWidth - (data.length - 1) * getResponsiveGap()
+    const availableWidth = chartWidth - (data.length - 1) * 6
     const barWidth = Math.max(20, availableWidth / data.length) // Minimum 20px bar width
-    const gap = getResponsiveGap()
+    const gap = 6
 
     data.forEach((d, i) => {
         const barHeight = Math.max(5, (d.count / maxCollaborations) * chartHeight) // Minimum 5px height
@@ -157,7 +151,7 @@ function drawBestFriendsChart(data, login) {
         label.setAttribute('x', x + barWidth / 2)
         label.setAttribute('y', svgHeight - margin.bottom + 15)
         label.setAttribute('text-anchor', 'middle')
-        label.setAttribute('font-size', getResponsiveLabelFont())
+        label.setAttribute('font-size', "12px")
         label.setAttribute('fill', '#9ca3af')
         label.setAttribute('font-weight', '500')
 
@@ -171,53 +165,12 @@ function drawBestFriendsChart(data, login) {
         value.setAttribute('x', x + barWidth / 2)
         value.setAttribute('y', y - 8)
         value.setAttribute('text-anchor', 'middle')
-        value.setAttribute('font-size', getResponsiveValueFont())
+        value.setAttribute('font-size', '11px')
         value.setAttribute('fill', '#e5e7eb')
         value.setAttribute('font-weight', '600')
         value.textContent = d.count
         svg.appendChild(value)
     })
-}
-
-function getResponsiveHeight() {
-    if (window.innerWidth <= 360) return 200
-    if (window.innerWidth <= 480) return 220
-    if (window.innerWidth <= 768) return 240
-    return 250
-}
-
-function getResponsiveMargins() {
-    if (window.innerWidth <= 360) {
-        return { top: 15, right: 8, bottom: 35, left: 15 }
-    }
-    if (window.innerWidth <= 480) {
-        return { top: 18, right: 10, bottom: 38, left: 18 }
-    }
-    if (window.innerWidth <= 768) {
-        return { top: 20, right: 12, bottom: 40, left: 20 }
-    }
-    return { top: 20, right: 10, bottom: 40, left: 20 }
-}
-
-function getResponsiveGap() {
-    if (window.innerWidth <= 360) return 4
-    if (window.innerWidth <= 480) return 6
-    if (window.innerWidth <= 768) return 8
-    return 10
-}
-
-function getResponsiveLabelFont() {
-    if (window.innerWidth <= 360) return '10px'
-    if (window.innerWidth <= 480) return '11px'
-    if (window.innerWidth <= 768) return '12px'
-    return '12px'
-}
-
-function getResponsiveValueFont() {
-    if (window.innerWidth <= 360) return '11px'
-    if (window.innerWidth <= 480) return '12px'
-    if (window.innerWidth <= 768) return '13px'
-    return '14px'
 }
 
 function truncateText(text) {
@@ -230,124 +183,17 @@ function truncateText(text) {
     return text
 }
 
-function getBreakpoint() {
-    const w = window.innerWidth;
-    if (w < 360) return 'xs';
-    if (w < 480) return 'sm';
-    if (w < 640) return 'md';
-    if (w < 768) return 'lg';
-    if (w < 1024) return 'xl';
-    return '2xl';
-}
-
-function getResponsiveSize(containerWidth) {
-    const actualWidth = containerWidth || window.innerWidth;
-    const bp = getBreakpoint();
-
-    const padding = {
-        'xs': 16, 'sm': 24, 'md': 32,
-        'lg': 40, 'xl': 48, '2xl': 56
-    }[bp];
-
-    const maxSizes = {
-        'xs': 160, 'sm': 180, 'md': 200,
-        'lg': 220, 'xl': 250, '2xl': 280
-    };
-
-    const availableSpace = actualWidth - padding;
-    return Math.min(availableSpace, maxSizes[bp]);
-}
-
-function getResponsiveRadius(size) {
-    const ratios = {
-        'xs': 0.32, 'sm': 0.33, 'md': 0.35,
-        'lg': 0.36, 'xl': 0.37, '2xl': 0.38
-    };
-    return size * ratios[getBreakpoint()];
-}
-
-function getResponsiveStrokeWidth(size) {
-    const bp = getBreakpoint();
-    const baseRatio = 0.08;
-
-    const adjustments = {
-        'xs': 0.8, 'sm': 0.9, 'md': 1.0,
-        'lg': 1.1, 'xl': 1.2, '2xl': 1.3
-    };
-
-    const minWidth = bp === 'xs' ? 8 : 12;
-    return Math.max(minWidth, size * baseRatio * adjustments[bp]);
-}
-
-function getResponsiveMainTextFont(size) {
-    const ratios = {
-        'xs': 0.10, 'sm': 0.12, 'md': 0.14,
-        'lg': 0.16, 'xl': 0.18, '2xl': 0.20
-    };
-
-    const fontSize = size * ratios[getBreakpoint()];
-    const minSize = getBreakpoint() === 'xs' ? 14 : 16;
-    const maxSize = 36;
-
-    return Math.min(maxSize, Math.max(minSize, fontSize));
-}
-
-function getResponsiveSubTextFont(size) {
-    const ratios = {
-        'xs': 0.05, 'sm': 0.06, 'md': 0.07,
-        'lg': 0.08, 'xl': 0.09, '2xl': 0.10
-    };
-
-    const fontSize = size * ratios[getBreakpoint()];
-    return Math.min(18, Math.max(10, fontSize));
-}
-
-function getResponsiveTextOffset(size) {
-    const offsets = {
-        'xs': 0.03, 'sm': 0.035, 'md': 0.04,
-        'lg': 0.045, 'xl': 0.05, '2xl': 0.055
-    };
-    return size * offsets[getBreakpoint()];
-}
-
-function getResponsiveSubTextOffset(size) {
-    const offsets = {
-        'xs': 0.06, 'sm': 0.07, 'md': 0.08,
-        'lg': 0.09, 'xl': 0.10, '2xl': 0.11
-    };
-    return size * offsets[getBreakpoint()];
-}
-
-function getResponsiveSubText() {
-    const texts = {
-        'xs': 'Success',
-        'sm': 'Success',
-        'md': 'Success',
-        'lg': 'Audit Success',
-        'xl': 'Audit Success',
-        '2xl': 'Audit Success'
-    };
-    return texts[getBreakpoint()];
-}
-
-// Enhanced responsive ratio chart function
 function drawRatioChart(data) {
     const svg = document.getElementById('ratioChart');
     if (!svg) return;
 
     svg.innerHTML = '';
 
-    // Get container width for responsive sizing
-    const container = svg.parentElement;
-    const containerWidth = container ? container.offsetWidth : window.innerWidth;
-
-    // Calculate responsive dimensions
-    const size = getResponsiveSize(containerWidth);
-    const radius = getResponsiveRadius(size);
-    const strokeWidth = getResponsiveStrokeWidth(size);
+    const size = 200;
+    const radius = 74;
+    const strokeWidth = 8;
     const circumference = 2 * Math.PI * radius;
 
-    // Update SVG dimensions
     svg.setAttribute('width', size);
     svg.setAttribute('height', size);
     svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
@@ -359,7 +205,7 @@ function drawRatioChart(data) {
         text.setAttribute('y', size / 2);
         text.setAttribute('text-anchor', 'middle');
         text.setAttribute('dominant-baseline', 'middle');
-        text.setAttribute('font-size', `${getResponsiveSubTextFont(size)}px`);
+        text.setAttribute('font-size', 18);
         text.setAttribute('fill', '#9ca3af');
         text.textContent = "No data yet.";
         svg.appendChild(text);
@@ -400,59 +246,33 @@ function drawRatioChart(data) {
     svg.appendChild(missedCircle);
 
     // Main percentage text
-    const textOffset = getResponsiveTextOffset(size);
+    const textOffset = 10
     const percentText = document.createElementNS("http://www.w3.org/2000/svg", "text");
     percentText.setAttribute('x', size / 2);
     percentText.setAttribute('y', (size / 2) - textOffset);
     percentText.setAttribute('text-anchor', 'middle');
     percentText.setAttribute('dominant-baseline', 'middle');
-    percentText.setAttribute('font-size', `${getResponsiveMainTextFont(size)}px`);
+    percentText.setAttribute('font-size', 36);
     percentText.setAttribute('font-weight', 'bold');
     percentText.setAttribute('fill', '#ffffff');
     percentText.textContent = `${data.completed.toFixed(0)}%`;
     svg.appendChild(percentText);
 
     // Subtitle text
-    const subTextOffset = getResponsiveSubTextOffset(size);
+    const subTextOffset = 200
     const subText = document.createElementNS("http://www.w3.org/2000/svg", "text");
     subText.setAttribute('x', size / 2);
     subText.setAttribute('y', (size / 2) + subTextOffset);
     subText.setAttribute('text-anchor', 'middle');
     subText.setAttribute('dominant-baseline', 'middle');
-    subText.setAttribute('font-size', `${getResponsiveSubTextFont(size)}px`);
+    subText.setAttribute('font-size', 36);
     subText.setAttribute('fill', '#9ca3af');
-    subText.textContent = getResponsiveSubText();
+    subText.textContent = "Audit Success"
     svg.appendChild(subText);
 
-    // Draw circles immediately without animation
     completedCircle.setAttribute('stroke-dasharray', `${completedDash} ${circumference - completedDash}`);
     missedCircle.setAttribute('stroke-dasharray', `${missedDash} ${circumference - missedDash}`);
     missedCircle.setAttribute('stroke-dashoffset', -completedDash);
-}
-
-// Auto-resize functionality
-let resizeTimeout;
-function setupRatioChartResize() {
-    function handleResize() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            // Get current data and redraw
-            const ratioDisplay = document.getElementById('ratioDisplay');
-            if (ratioDisplay && ratioDisplay.textContent) {
-                const currentRatio = parseFloat(ratioDisplay.textContent);
-                const completedPercentage = (currentRatio / (currentRatio + 1)) * 100;
-                drawRatioChart({ completed: completedPercentage, missed: 100 - completedPercentage });
-            }
-        }, 150);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Return cleanup function
-    return () => {
-        window.removeEventListener('resize', handleResize);
-        clearTimeout(resizeTimeout);
-    };
 }
 
 async function getAllData() {
@@ -464,12 +284,10 @@ async function getAllData() {
     document.getElementById('totalXP').textContent = `${(allDataJson.xp.totalXp / 1000).toFixed(2)} kB`;
     document.getElementById('userLevel').textContent = allDataJson.xp.level.toString();
 
-    // Ratio - using responsive chart
     document.getElementById('ratioDisplay').textContent = allDataJson.ratio.ratio.toFixed(2);
     const completedPercentage = (allDataJson.ratio.totalUp / (allDataJson.ratio.totalUp + allDataJson.ratio.totalDown)) * 100;
     drawRatioChart({ completed: completedPercentage, missed: 100 - completedPercentage });
 
-    // Current Project
     document.getElementById('projectName').textContent = allDataJson.currentProject;
     const teamData = allDataJson.teamMembers;
     if (teamData.length > 0) {
@@ -492,5 +310,4 @@ async function getAllData() {
     // Friends data
     let friends = allDataJson.friends;
     drawBestFriendsChart(friends.slice(0, 5));
-    setupRatioChartResize();
 }

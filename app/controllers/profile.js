@@ -16,7 +16,8 @@ export async function personalInfos() {
         const res = await fetch("https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql", {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`, //Bearer means : Anyone who possesses this token can access the protected resources it's tied to
+                //bears : holds
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ query })
